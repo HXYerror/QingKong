@@ -37,7 +37,6 @@ public class DBManager {
 
     /* 新增一条城市记录*/
     public static long addCityInfo(String city,String cityCode,String content){
-        //todo cityCode什么时候获取啊
         ContentValues values = new ContentValues();
         values.put("city",city);
         values.put("content",content);

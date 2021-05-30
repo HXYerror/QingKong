@@ -68,7 +68,9 @@ public class DeleteCityActivity extends AppCompatActivity implements View.OnClic
                 }
                 DoTool.runMusic(this,R.raw.delete);
                 DoTool.runToast(this,getPackageName(),"删除成功");
-                finish();
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
                 break;
         }
     }

@@ -17,7 +17,7 @@ public class GetData {
             }
         });
         thread.start();
-        while (thread.isAlive()){};
+        while (thread.isAlive());
         return str[0];
     }
 }

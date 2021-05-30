@@ -34,11 +34,11 @@
             android:text="9~-1℃"/>
     <ImageView
             android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_height="30dp"
             android:id="@+id/item_center_iv"
             android:layout_toLeftOf="@id/item_center_tv_temp"
             android:layout_marginRight="10dp"
-            android:src="@mipmap/snow"
+            android:src="@mipmap/sun"
             />
 
     <TextView

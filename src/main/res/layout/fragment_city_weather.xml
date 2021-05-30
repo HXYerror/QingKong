@@ -78,8 +78,7 @@
                     android:id="@+id/frag_iv_today"
                     android:scaleType="centerCrop"
                     android:layout_centerInParent="true"
-
-                    android:background="@mipmap/sun"/>
+                    android:src="@mipmap/sun"/>
         </RelativeLayout>
 
         <!-- 用于显示未来三天的天气情况-->
