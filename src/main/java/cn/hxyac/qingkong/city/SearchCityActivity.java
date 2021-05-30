@@ -72,14 +72,15 @@ public class SearchCityActivity extends AppCompatActivity implements View.OnClic
 
     public void next(){
         String result = GetData.Data(URLUtils.getCity_url(city));
+
         CityCodeBean cityCodeBean = new Gson().fromJson(result,CityCodeBean.class);
-        if(cityCodeBean.getCode().equals("200")){
+        if(result != null && cityCodeBean.getCode().equals("200")){
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("city",cityCodeBean.getLocation().get(0).getName());
             intent.putExtra("cityCode",cityCodeBean.getLocation().get(0).getId());
             startActivity(intent);
-            //todo 广播添加成功
+            DoTool.runMusic(this,R.raw.add);
             DoTool.runToast(this,getPackageName(),"添加成功");
         }else{
             Toast.makeText(this,"添加失败，未收录此城市！",Toast.LENGTH_SHORT).show();

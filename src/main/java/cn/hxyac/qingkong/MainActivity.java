@@ -2,17 +2,20 @@ package cn.hxyac.qingkong;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 import cn.hxyac.qingkong.city.CityManagerActivity;
 import cn.hxyac.qingkong.db.DBManager;
+import cn.hxyac.qingkong.tools.DoTool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +28,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageView addCityIv,moreIv;
     LinearLayout pointLayout;
     ViewPager2 mainVp;
-
     List<Fragment> fragmentList;
     List<String[]> cityList;
     List<ImageView> imageViewList;
 
     CityFragmentPagerAdapter adapter;
+    private SharedPreferences pref;
+    LinearLayout mainLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         moreIv = findViewById(R.id.main_iv_more);
         pointLayout = findViewById(R.id.main_layout_point);
         mainVp = findViewById(R.id.main_vp);
+        mainLayout = findViewById(R.id.main_layout);
 
         //添加点击事件，增加城市和设置
         addCityIv.setOnClickListener(this);
@@ -93,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //设置ViewPager页面监听
         setPagerListener();
 
+        exchangeBg();
     }
 
     private void setPagerListener(){
@@ -142,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent.setClass(this, CityManagerActivity.class);
                 break;
             case R.id.main_iv_more:
+                DoTool.runMusic(this,R.raw.more);
                 intent.setClass(this, MoreActivity.class);
                 break;
         }
@@ -157,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         cityList.clear();
         cityList.addAll(list);
+
         fragmentList.clear();
         initPager();
         adapter.notifyDataSetChanged();
@@ -165,6 +173,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         pointLayout.removeAllViews();
         initPoint();
 
+        exchangeBg();
         mainVp.setCurrentItem(fragmentList.size()-1);
+    }
+
+    public void exchangeBg(){
+        pref = getSharedPreferences("bg_pref", MODE_PRIVATE);
+        int bgNum = pref.getInt("bg", 2);
+        switch (bgNum) {
+            case 1:
+                mainLayout .setBackgroundResource(R.mipmap.bg1);
+                break;
+            case 2:
+                mainLayout .setBackgroundResource(R.mipmap.bg2);
+                break;
+            case 3:
+                mainLayout .setBackgroundResource(R.mipmap.bg3);
+                break;
+        }
+
     }
 }

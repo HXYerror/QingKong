@@ -10,7 +10,6 @@ import cn.hxyac.qingkong.R;
 
 public class MusicService extends Service {
 
-    static boolean ifPlayer = true;
     private MediaPlayer player;
 
     @Nullable
@@ -29,14 +28,14 @@ public class MusicService extends Service {
         // The service is starting, due to a call to startService()
         int resid = intent.getIntExtra("resid",R.raw.error);
         player = MediaPlayer.create(this,resid);
-        if(ifPlayer) {
-            player.start();
-        }
+        player.start();
         return super.onStartCommand(intent, flags, startId);
     }
 
     public void onDestroy(){
-        if(ifPlayer) player.stop();
+        player.stop();
         super.onDestroy();
     }
+
+
 }

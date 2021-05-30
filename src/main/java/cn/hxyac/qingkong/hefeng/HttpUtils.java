@@ -3,8 +3,6 @@ package cn.hxyac.qingkong.hefeng;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class HttpUtils {
@@ -13,6 +11,7 @@ public class HttpUtils {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
             URL url = new URL(path);
+            //System.out.println(path);
             HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
             InputStream is = conn.getInputStream();
             int hasRead = 0;
@@ -23,6 +22,7 @@ public class HttpUtils {
 
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
         return baos.toString();
     }
