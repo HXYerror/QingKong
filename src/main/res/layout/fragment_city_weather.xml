@@ -1,14 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context=".CityWeatherFragment">
+             tools:context=".CityWeatherFragment"
+             >
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
+            android:id="@+id/frag_layout"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment"/>
+            android:layout_height="match_parent" >
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:padding="10dp">
 
-</ScrollView>
+            <TextView
+                    android:id="@+id/frag_tv_currenttemp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="3℃"
+                    android:textSize="120sp"
+                    android:textStyle="bold"
+                    android:textAlignment="center"/>
+        </RelativeLayout>
+
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+
+            <TextView
+                    android:id="@+id/frag_tv_city"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="25dp"
+                    android:text="北京"
+                    style="@style/todayText"
+                    />
+
+            <TextView
+                    android:id="@+id/frag_tv_condition"
+                    android:layout_alignParentLeft="true"
+                    android:text="晴"
+                    android:layout_below="@id/frag_tv_city"
+                    style="@style/todayText"/>
+
+
+            <TextView
+                    android:id="@+id/frag_tv_date"
+                    android:text="2019-11-05"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="15dp"
+                    style="@style/todayText"/>
+
+            <TextView
+                    android:id="@+id/frag_tv_wind"
+                    style="@style/todayText"
+                    android:layout_below="@id/frag_tv_date"
+                    android:layout_alignParentRight="true"
+                    android:text="东北风3~4级"/>
+
+            <TextView
+                    android:id="@+id/frag_tv_temprange"
+                    android:text="9~-1℃"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/frag_tv_wind"
+                    style="@style/todayText"/>
+
+            <ImageView
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:id="@+id/frag_iv_today"
+                    android:scaleType="centerCrop"
+                    android:layout_centerInParent="true"
+                    android:src="@mipmap/sun"/>
+        </RelativeLayout>
+
+        <!-- 用于显示未来三天的天气情况-->
+        <LinearLayout
+                android:id="@+id/frag_center_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/fragment_bg"
+                ></LinearLayout>
+
+        <!-- 用于表示指数信息的线性布局-->
+        <LinearLayout
+                android:id="@+id/frag_index_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/fragment_bg"
+                android:layout_margin="10dp"
+                android:padding="10dp">
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                <TextView
+                        android:id="@+id/frag_index_tv_dress"
+                        style="@style/indexText"
+                        android:text="穿衣指数"
+                        android:drawableBottom="@mipmap/icon_cloth"/>
+                <ImageView
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="#7699D5"/>
+                <TextView
+                        android:id="@+id/frag_index_tv_washcar"
+                        style="@style/indexText"
+                        android:text="洗车指数"
+                        android:drawableBottom="@mipmap/icon_car"/>
+                <ImageView
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="#7699D5"/>
+                <TextView
+                        android:id="@+id/frag_index_tv_cold"
+                        style="@style/indexText"
+                        android:text="感冒指数"
+                        android:drawableBottom="@mipmap/icon_ganmao"/>
+            </LinearLayout>
+            <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="#7699D5"/>
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                <TextView
+                        android:id="@+id/frag_index_tv_sport"
+                        style="@style/indexText"
+                        android:text="运动指数"
+                        android:drawableBottom="@mipmap/icon_sport"/>
+                <ImageView
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="#7699D5"/>
+                <TextView
+                        android:id="@+id/frag_index_tv_rays"
+                        style="@style/indexText"
+                        android:text="紫外线指数"
+                        android:drawableBottom="@mipmap/icon_light"/>
+                <ImageView
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="#7699D5"/>
+                <TextView
+                        android:id="@+id/frag_index_tv_air"
+                        style="@style/indexText"
+                        android:text="空调指数"
+                        android:drawablePadding="10dp"
+                        android:drawableBottom="@mipmap/icon_air"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
