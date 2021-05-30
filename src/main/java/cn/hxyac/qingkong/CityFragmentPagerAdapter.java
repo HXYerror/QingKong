@@ -27,13 +27,13 @@ public class CityFragmentPagerAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        System.out.println("创建" + position);
+        //todo println("创建" + position)
+        //System.out.println("创建" + position);
         return fragmentList.get(position);
     }
 
     @Override
     public int getItemCount() {
-        System.out.println("得到数量"+fragmentList.size());
         return fragmentList.size();//Number of fragments displayed
     }
 

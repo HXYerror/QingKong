@@ -5,6 +5,7 @@ package cn.hxyac.qingkong;
 
 import android.graphics.drawable.Icon;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,9 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 import cn.hxyac.qingkong.bean.ThreeDayBean;
 import cn.hxyac.qingkong.bean.WeatherBean;
+import cn.hxyac.qingkong.db.DBManager;
 import cn.hxyac.qingkong.hefeng.GetData;
+import cn.hxyac.qingkong.hefeng.URLUtils;
 import com.google.gson.Gson;
 
 import java.lang.reflect.Type;
@@ -29,6 +32,8 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
     ImageView dayIv;
     LinearLayout futureLayout;
     ScrollView outLayout;
+    String city;
+    String cityCode;
 
     //JHIndexBean.ResultBean.LifeBean lifeBean;    //指数信息
 
@@ -40,10 +45,13 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_city_weather, container, false);
         initView(view);
-        getData("101010100");
-        System.out.println("设置viewpaper的视图");
+        Bundle bundle = getArguments();
+        city = bundle.getString("city");
+        cityCode = bundle.getString("citycode");
+        getData();
         return view;
     }
+
 
 
     private void initView(View view) {
@@ -72,24 +80,31 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
         airIndexTv.setOnClickListener(this);
     }
 
-//   @Override
-//    public void onSuccess(String result, Type type) {
-//        parseData(result,type);
-//    }
-//
-//    @Override
-//    public void onError(Throwable ex, boolean isOnCallback) {
-//
-//    }
-
-    private void getData(String cityCode) {
-        String result = GetData.DataTemp(cityCode);
+    private void getData() {
+        //todo 如果没有获取到数据，根据code判断，告知用户
+        String result = GetData.Data(URLUtils.getTemp_url(cityCode));
+        //System.out.println(result);
         WeatherBean weatherBean = (WeatherBean) parseData(result,WeatherBean.class);
-        showDataTemp(weatherBean);
 
-        result = GetData.DataThree(cityCode);
+        if(weatherBean.getCode().equals("200")){
+            int i = DBManager.updateInfoByCity(city,result);
+            if (i<=0) {
+                DBManager.addCityInfo(city,cityCode,result);
+            }
+            showDataTemp(weatherBean);
+        }else{
+            String s = DBManager.queryInfoByCity(city);
+            if (!TextUtils.isEmpty(s)) {
+                weatherBean = (WeatherBean) parseData(s,WeatherBean.class);
+                showDataTemp(weatherBean);
+            }
+        }
+
+        result = GetData.Data(URLUtils.getThree_url(cityCode));
         ThreeDayBean threeDayBean = (ThreeDayBean) parseData(result,ThreeDayBean.class);
-        showDataThree(threeDayBean);
+        if(threeDayBean.getCode().equals("200")){
+            showDataThree(threeDayBean);
+        }
     }
 
     private Object parseData(String result, Type type) {
@@ -101,7 +116,7 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
 
         tempTv.setText(weatherBean.getNow().getTemp());
         //todo city信息需要提前写好，接口没有
-        //cityTv.setText(weatherBean.getNow().get);
+        cityTv.setText(city);
         conditionTv.setText(weatherBean.getNow().getText());
         windTv.setText(weatherBean.getNow().getWindDir() + " " + weatherBean.getNow().getWindScale()+"级");
         tempRangeTv.setText("体感"+weatherBean.getNow().getFeelsLike());
@@ -110,7 +125,6 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
         //根据天气选择图标
         //todo 图标的路径转化可能有问题，之后再看
         //dayIv.setImageIcon(Icon.createWithContentUri("@mipmap/"+ "i"+weatherBean.getNow().getIcon()));
-        //dayIv.setImageIcon(Icon.createWithFilePath("@mipmap/"+ "i"+weatherBean.getNow().getIcon()));
     }
 
     private void showDataThree(ThreeDayBean threeDayBean) {
