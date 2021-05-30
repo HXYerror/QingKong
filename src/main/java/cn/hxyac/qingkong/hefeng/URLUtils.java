@@ -8,13 +8,20 @@ public class URLUtils {
 
     public static String three_url = "https://devapi.qweather.com/v7/weather/3d";
 
-    public static String getTemp_url(String city){
-        String url = now_url+"?location="+city+"&key="+KEY;
+    public static String city_url = "https://geoapi.qweather.com/v2/city/lookup";
+
+    public static String getTemp_url(String cityCode){
+        String url = now_url+"?location="+cityCode+"&key="+KEY;
         return url;
     }
 
-    public static String getThree_url(String city){
-        String url = three_url+"?location="+city+"&key="+KEY;
+    public static String getThree_url(String cityCode){
+        String url = three_url+"?location="+cityCode+"&key="+KEY;
+        return url;
+    }
+
+    public static String getCity_url(String city){
+        String url = city_url+"?location="+city+"&key="+KEY;
         return url;
     }
 }

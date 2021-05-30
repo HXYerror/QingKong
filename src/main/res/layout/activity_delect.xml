@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".city.DeleteCityActivity">
+
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="#8899DBFE"
+            android:id="@+id/delete_top_layout">
+        <ImageView
+                android:id="@+id/delete_iv_error"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@mipmap/error"
+                android:layout_marginLeft="5dp"/>
+        <ImageView
+                android:id="@+id/delete_iv_right"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@mipmap/down"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="5dp"/>
+        <TextView
+                android:id="@+id/delete_tv_title"
+                android:text="删除城市"
+                android:layout_centerInParent="true"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <ImageView
+            android:id="@+id/delete_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#DCDCDC"/>
+
+    <ListView
+            android:id="@+id/delete_lv"
+            android:divider="@null"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/delete_line"/>
+
+</LinearLayout>

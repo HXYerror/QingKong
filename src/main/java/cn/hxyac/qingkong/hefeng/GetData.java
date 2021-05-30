@@ -4,13 +4,13 @@ import java.util.concurrent.Callable;
 
 public class GetData {
 
-    public static String DataTemp(final String cityCode){
+    public static String Data(final String url){
         final String[] str = new String[1];
         Thread thread =  new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    str[0] =  HttpUtils.getJsonContent(URLUtils.getTemp_url(cityCode));
+                    str[0] =  HttpUtils.getJsonContent(url);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -18,25 +18,6 @@ public class GetData {
         });
         thread.start();
         while (thread.isAlive()){};
-        System.out.println(str[0]);
-        return str[0];
-    }
-
-    public static String DataThree(final String cityCode){
-        final String[] str = new String[1];
-        Thread thread =  new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    str[0] =  HttpUtils.getJsonContent(URLUtils.getThree_url(cityCode));
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        });
-        thread.start();
-        while (thread.isAlive()){};
-        System.out.println(str[0]);
         return str[0];
     }
 }

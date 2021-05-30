@@ -1,17 +1,18 @@
 package cn.hxyac.qingkong;
 
-import android.app.Activity;
+
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
-import cn.hxyac.qingkong.hefeng.GetData;
+import cn.hxyac.qingkong.city.CityManagerActivity;
+import cn.hxyac.qingkong.db.DBManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,11 +24,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     ImageView addCityIv,moreIv;
     LinearLayout pointLayout;
-    RelativeLayout outLayout;
     ViewPager2 mainVp;
 
     List<Fragment> fragmentList;
-    List<String> cityList;
+    List<String[]> cityList;
     List<ImageView> imageViewList;
 
     CityFragmentPagerAdapter adapter;
@@ -49,49 +49,122 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //加载fragment
         fragmentList = new ArrayList<>();
-        cityList = new ArrayList<>();
+
+        //todo 听说操作数据库是在子线程完成？
+        cityList = DBManager.queryAllCityName();
         imageViewList = new ArrayList<>();
 
-        //todo 这里放汉字还是编码，之后还要考虑
+
+        try {
+            Intent intent = getIntent();
+            String cityCode = intent.getStringExtra("cityCode");
+            String city = intent.getStringExtra("city");
+            String[] temp = new String[2];
+            temp[0] = city;
+            temp[1] = cityCode;
+
+            if (!TextUtils.isEmpty(city)) {
+                int i = 0;
+                for(;i < cityList.size();i++){
+                    if(cityList.get(i)[1].equals(cityCode)){
+                        break;
+                    }
+                }
+                if(i == cityList.size()) cityList.add(temp);
+            }
+        }catch (Exception e){
+            Log.i("hxyerror","对不起，我有罪");
+        }
+
+
         if (cityList.size()==0) {
-            cityList.add("北京");
-            cityList.add("天津");
+            cityList.add(new String[]{"北京","101010100"});
+            cityList.add(new String[]{"天津","101030100"});
         }
 
         initPager();
-
-
-        //adapter = new CityFragmentPagerAdapter(this,fragmentList);
-        adapter = new CityFragmentPagerAdapter(getSupportFragmentManager(),getLifecycle(),fragmentList);
+        adapter = new CityFragmentPagerAdapter(this,fragmentList);
+        //adapter = new CityFragmentPagerAdapter(getSupportFragmentManager(),getLifecycle(),fragmentList);
         mainVp.setAdapter(adapter);
 
-       /* 测试获取https数据
-       GetData.testData();*/
+        initPoint();
+        mainVp.setCurrentItem(fragmentList.size()-1);
 
-        //initPoint();
+        //设置ViewPager页面监听
+        setPagerListener();
+
+    }
+
+    private void setPagerListener(){
+        mainVp.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                for (int i = 0; i < imageViewList.size(); i++) {
+                    imageViewList.get(i).setImageResource(R.mipmap.a1);
+                }
+                imageViewList.get(position).setImageResource(R.mipmap.a2);
+            }
+        });
+    }
+
+    private void initPoint() {
+        for (int i = 0; i < fragmentList.size(); i++) {
+            ImageView pIv = new ImageView(this);
+            pIv.setImageResource(R.mipmap.a1);
+            pIv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) pIv.getLayoutParams();
+            lp.setMargins(0,0,20,0);
+            imageViewList.add(pIv);
+            pointLayout.addView(pIv);
+        }
+        imageViewList.get(imageViewList.size()-1).setImageResource(R.mipmap.a2);
     }
 
     private void initPager() {
-        /* 创建Fragment对象，添加到ViewPager数据源当中*/
+        //创建Fragment对象，添加到ViewPager数据源当中
         for (int i = 0; i < cityList.size(); i++) {
             CityWeatherFragment cwFrag = new CityWeatherFragment();
             Bundle bundle = new Bundle();
-            bundle.putString("city",cityList.get(i));
+            bundle.putString("city",cityList.get(i)[0]);
+            bundle.putString("citycode",cityList.get(i)[1]);
             cwFrag.setArguments(bundle);
             fragmentList.add(cwFrag);
-            System.out.println("添加"+ cityList.get(i));
+            //todo println("添加"+ cityList.get(i)[0])
+            //System.out.println("添加"+ cityList.get(i)[0]);
         }
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        Intent intent = new Intent();
+        switch (v.getId()) {
             case R.id.main_iv_add:
-
+                intent.setClass(this, CityManagerActivity.class);
                 break;
             case R.id.main_iv_more:
-
+                intent.setClass(this, MoreActivity.class);
                 break;
         }
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        List<String[]> list = DBManager.queryAllCityName();
+        if (list.size()==0) {
+            list.add(new String[]{"北京","101010100"});
+        }
+        cityList.clear();
+        cityList.addAll(list);
+        fragmentList.clear();
+        initPager();
+        adapter.notifyDataSetChanged();
+
+        imageViewList.clear();
+        pointLayout.removeAllViews();
+        initPoint();
+
+        mainVp.setCurrentItem(fragmentList.size()-1);
     }
 }
